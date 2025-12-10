@@ -1,7 +1,6 @@
 // Lokasi: src/services/api.js
 import axios from "axios";
 
-// URL Backend
 const BASE_URL = "https://asah-dicoding-backend.vercel.app/api";
 
 const api = axios.create({
@@ -11,7 +10,6 @@ const api = axios.create({
   },
 });
 
-// Interceptor: Otomatis sisipkan Token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -24,6 +22,7 @@ api.interceptors.request.use(
 );
 
 export const authService = {
+  // Login
   login: async (email, password) => {
     const response = await api.post("/login", { email, password });
     if (response.data.token) {
@@ -31,19 +30,30 @@ export const authService = {
     }
     return response.data;
   },
+
+  // Register (Baru)
+  register: async (name, email, password) => {
+    const response = await api.post("/register", { name, email, password });
+    return response.data;
+  },
+
+  // Lupa Password (Baru)
+  forgotPassword: async (email) => {
+    // Mengirim request reset password ke email
+    const response = await api.post("/forgot-password", { email });
+    return response.data;
+  },
+
   logout: () => {
     localStorage.removeItem("token");
   },
 };
 
 export const dashboardService = {
-  // Ambil Data Dashboard
   getData: async () => {
     const response = await api.get("/dashboard");
     return response.data;
   },
-
-  // Update Target (POST /target)
   updateTarget: async (value) => {
     const response = await api.post("/target", {
       target_type: "study_duration",
@@ -51,10 +61,7 @@ export const dashboardService = {
     });
     return response.data;
   },
-
-  // Update Insight / Predict (POST /predict) <-- INI YANG DIUBAH
   postInsight: async (insightData) => {
-    // Sebelumnya '/insight', sekarang jadi '/predict'
     const response = await api.post("/predict", insightData);
     return response.data;
   },

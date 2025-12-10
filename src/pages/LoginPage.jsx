@@ -1,121 +1,283 @@
 // Lokasi: src/pages/LoginPage.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authService } from "../services/api"; // Panggil kurir API kita
-import { LogIn, AlertCircle } from "lucide-react";
+import { authService } from "../services/api";
+import {
+  LogIn,
+  UserPlus,
+  AlertCircle,
+  Lock,
+  Mail,
+  Eye,
+  EyeOff,
+  User,
+  KeyRound,
+  ArrowLeft,
+} from "lucide-react";
+import logo from "../assets/logo.png";
 
 const LoginPage = () => {
+  const [viewMode, setViewMode] = useState("login");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault(); // Mencegah reload halaman
+  const switchMode = (mode) => {
+    setViewMode(mode);
     setError("");
+    setSuccessMsg("");
+    if (mode === "login") setSuccessMsg("");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccessMsg("");
     setIsLoading(true);
 
     try {
-      // 1. Panggil API Login
-      // Sesuai PDF: Email: igihcksn@gmail.com, Pass: password123
-      await authService.login(email, password);
-
-      // 2. Jika sukses, Token otomatis tersimpan di localStorage (cek api.js)
-
-      // 3. Arahkan ke Dashboard
-      navigate("/dashboard");
+      if (viewMode === "login") {
+        await authService.login(email, password);
+        navigate("/dashboard");
+      } else if (viewMode === "register") {
+        await authService.register(name, email, password);
+        setSuccessMsg("Registrasi berhasil! Silakan login.");
+        setViewMode("login");
+        setPassword("");
+      } else if (viewMode === "forgot") {
+        await authService.forgotPassword(email);
+        setSuccessMsg("Link reset password telah dikirim.");
+      }
     } catch (err) {
-      // Handle Error (misal password salah)
-      setError(
-        err.response?.data?.message || "Gagal login. Periksa email/password."
-      );
+      const apiError = err.response?.data?.message || err.message;
+      setError(apiError || "Terjadi kesalahan. Silakan coba lagi.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-        {/* Header Login */}
+    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-4 font-sans relative">
+      {/* Dekorasi Background */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+        <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
+        <div className="absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
+      </div>
+
+      <div className="relative z-10 max-w-md w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 md:p-10 border border-slate-100">
+        {/* Header Logo */}
         <div className="text-center mb-8">
-          <div className="inline-block p-3 bg-blue-50 rounded-full mb-4">
-            <h1 className="text-2xl font-bold text-blue-600 tracking-tight">
-              dicoding
-            </h1>
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Selamat Datang Kembali
+          <img
+            src={logo}
+            alt="Dicoding Logo"
+            className="h-10 mx-auto mb-6 object-contain"
+          />
+
+          <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
+            {viewMode === "register"
+              ? "Buat Akun Baru"
+              : viewMode === "forgot"
+              ? "Reset Kata Sandi"
+              : "Selamat Datang"}
           </h2>
-          <p className="text-gray-500 text-sm mt-2">
-            Masuk untuk melihat progres belajarmu
+
+          <p className="text-slate-500 text-sm mt-2">
+            {viewMode === "register"
+              ? "Mulai perjalanan belajar Anda hari ini."
+              : viewMode === "forgot"
+              ? "Kami akan mengirimkan link pemulihan."
+              : "Masuk untuk mengakses dashboard pembelajaran."}
           </p>
         </div>
 
-        {/* Alert Error */}
+        {/* Notifications */}
         {error && (
-          <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg flex items-center gap-2 border border-red-100">
-            <AlertCircle size={16} />
-            {error}
+          <div className="mb-6 p-4 bg-red-50 text-red-600 text-sm rounded-xl flex items-start gap-3 border border-red-100">
+            <AlertCircle size={20} className="shrink-0 mt-0.5" />
+            <span>{error}</span>
           </div>
         )}
 
-        {/* Form */}
-        <form onSubmit={handleLogin} className="space-y-6">
+        {successMsg && (
+          <div className="mb-6 p-4 bg-emerald-50 text-emerald-600 text-sm rounded-xl flex items-start gap-3 border border-emerald-100">
+            <CheckCircleIcon />
+            <span>{successMsg}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Input Nama */}
+          {viewMode === "register" && (
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">
+                Nama Lengkap
+              </label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                  <User size={18} />
+                </div>
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Nama Lengkap Anda"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-slate-800 placeholder-slate-400"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Input Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+            <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">
+              Alamat Email
             </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="contoh: igihcksn@gmail.com"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-            />
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <Mail size={18} />
+              </div>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="nama@email.com"
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-slate-800 placeholder-slate-400"
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-            />
-          </div>
+          {/* Input Password */}
+          {viewMode !== "forgot" && (
+            <div>
+              <div className="flex justify-between items-center mb-1.5 ml-1">
+                <label className="block text-sm font-semibold text-slate-700">
+                  Kata Sandi
+                </label>
+                {viewMode === "login" && (
+                  <button
+                    type="button"
+                    onClick={() => switchMode("forgot")}
+                    className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                  >
+                    Lupa kata sandi?
+                  </button>
+                )}
+              </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`w-full flex justify-center items-center gap-2 py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${
-              isLoading ? "opacity-70 cursor-not-allowed" : ""
-            }`}
-          >
-            {isLoading ? (
-              "Memproses..."
-            ) : (
-              <>
-                <LogIn size={18} /> Masuk Sekarang
-              </>
-            )}
-          </button>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                  <Lock size={18} />
+                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Masukkan kata sandi"
+                  className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-slate-800 placeholder-slate-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Tombol Submit */}
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={`w-full flex justify-center items-center gap-2 py-3.5 px-4 border border-transparent rounded-xl shadow-lg shadow-blue-500/30 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all transform active:scale-[0.98] ${
+                isLoading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
+            >
+              {isLoading ? (
+                "Memproses..."
+              ) : (
+                <>
+                  {viewMode === "register" ? (
+                    <UserPlus size={18} />
+                  ) : viewMode === "forgot" ? (
+                    <KeyRound size={18} />
+                  ) : (
+                    <LogIn size={18} />
+                  )}
+
+                  {viewMode === "register"
+                    ? "Daftar Sekarang"
+                    : viewMode === "forgot"
+                    ? "Kirim Link Reset"
+                    : "Masuk ke Dashboard"}
+                </>
+              )}
+            </button>
+          </div>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-500">
-          Akun Demo:{" "}
-          <span className="font-mono text-gray-700">igihcksn@gmail.com</span> /{" "}
-          <span className="font-mono text-gray-700">password123</span>
-        </p>
+        {/* --- UPDATE: FOOTER ALIGNMENT --- */}
+        <div className="mt-8 text-center border-t border-slate-100 pt-6">
+          {viewMode === "login" ? (
+            <div className="flex items-center justify-center gap-1.5 text-sm text-slate-600">
+              <span>Belum punya akun?</span>
+              <button
+                onClick={() => switchMode("register")}
+                className="font-bold text-blue-600 hover:text-blue-700 hover:underline"
+              >
+                Daftar sekarang
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-1.5 text-sm text-slate-600">
+              <span>Sudah punya akun?</span>
+              <button
+                onClick={() => switchMode("login")}
+                className="font-bold text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1"
+              >
+                <ArrowLeft size={16} /> Kembali Login
+              </button>
+            </div>
+          )}
+
+          <p className="text-xs text-slate-400 mt-6">
+            &copy; 2025 Asah Platform. All rights reserved.
+          </p>
+        </div>
       </div>
     </div>
   );
 };
+
+// Helper Icon
+const CheckCircleIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="shrink-0 mt-0.5"
+  >
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+  </svg>
+);
 
 export default LoginPage;
