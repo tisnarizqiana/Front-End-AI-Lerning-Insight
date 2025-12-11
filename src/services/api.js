@@ -10,7 +10,7 @@ const api = axios.create({
   },
 });
 
-// Interceptor Login (Tetap sama)
+// Interceptor untuk Token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -31,28 +31,24 @@ export const authService = {
     return response.data;
   },
 
-  // REVISI REGISTER: Hanya kirim email & password (sesuai dokumen)
   register: async (email, password) => {
     const response = await api.post("/register", { email, password });
     return response.data;
   },
 
-  // Lupa Password (Request Link)
   forgotPassword: async (email) => {
     const response = await api.post("/forgot-password", { email });
     return response.data;
   },
 
-  // REVISI RESET PASSWORD (Update Password)
-  // Token harus dikirim via Header Authorization, bukan Body
   updateNewPassword: async (token, newPassword) => {
     const response = await axios.post(
       `${BASE_URL}/update-password`,
-      { new_password: newPassword }, // Body sesuai dokumen
+      { new_password: newPassword },
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Token wajib di sini
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -69,7 +65,6 @@ export const dashboardService = {
     const response = await api.get("/dashboard");
     return response.data;
   },
-  // ... (sisa dashboardService sama)
   updateTarget: async (value) => {
     const response = await api.post("/target", {
       target_type: "study_duration",
@@ -78,7 +73,13 @@ export const dashboardService = {
     return response.data;
   },
   postInsight: async (insightData) => {
-    const response = await api.post("/insight", insightData); // URL balik ke /insight sesuai dokumen poin 4
+    const response = await api.post("/insight", insightData);
+    return response.data;
+  },
+
+  // --- FITUR BARU: TOMBOL ANALISIS ---
+  predict: async () => {
+    const response = await api.post("/predict");
     return response.data;
   },
 };
