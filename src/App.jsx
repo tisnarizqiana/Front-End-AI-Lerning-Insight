@@ -4,9 +4,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage"; // <-- Import Wajib
 import ComingSoonPage from "./pages/ComingSoonPage";
 
-// Komponen Pelindung (Cek apakah user punya token)
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -19,15 +19,16 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Halaman Login (Public) */}
+        {/* Halaman Public */}
         <Route path="/login" element={<LoginPage />} />
 
-        {/* Redirect root (/) ke dashboard */}
+        {/* Halaman Reset Password (Public, akses via link email) */}
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-        {/* Halaman yang dilindungi (Butuh Login) & Pakai Sidebar */}
+        {/* Halaman Protected (Butuh Login) */}
         <Route element={<MainLayout />}>
-          {/* Dashboard Utama */}
           <Route
             path="/dashboard"
             element={
@@ -37,7 +38,6 @@ function App() {
             }
           />
 
-          {/* Halaman Menu Lain (Coming Soon) */}
           <Route
             path="/progress"
             element={

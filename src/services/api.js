@@ -10,6 +10,7 @@ const api = axios.create({
   },
 });
 
+// Interceptor Login (Tetap sama)
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -22,7 +23,6 @@ api.interceptors.request.use(
 );
 
 export const authService = {
-  // Login
   login: async (email, password) => {
     const response = await api.post("/login", { email, password });
     if (response.data.token) {
@@ -31,16 +31,31 @@ export const authService = {
     return response.data;
   },
 
-  // Register (Baru)
-  register: async (name, email, password) => {
-    const response = await api.post("/register", { name, email, password });
+  // REVISI REGISTER: Hanya kirim email & password (sesuai dokumen)
+  register: async (email, password) => {
+    const response = await api.post("/register", { email, password });
     return response.data;
   },
 
-  // Lupa Password (Baru)
+  // Lupa Password (Request Link)
   forgotPassword: async (email) => {
-    // Mengirim request reset password ke email
     const response = await api.post("/forgot-password", { email });
+    return response.data;
+  },
+
+  // REVISI RESET PASSWORD (Update Password)
+  // Token harus dikirim via Header Authorization, bukan Body
+  updateNewPassword: async (token, newPassword) => {
+    const response = await axios.post(
+      `${BASE_URL}/update-password`,
+      { new_password: newPassword }, // Body sesuai dokumen
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Token wajib di sini
+        },
+      }
+    );
     return response.data;
   },
 
@@ -54,6 +69,7 @@ export const dashboardService = {
     const response = await api.get("/dashboard");
     return response.data;
   },
+  // ... (sisa dashboardService sama)
   updateTarget: async (value) => {
     const response = await api.post("/target", {
       target_type: "study_duration",
@@ -62,7 +78,7 @@ export const dashboardService = {
     return response.data;
   },
   postInsight: async (insightData) => {
-    const response = await api.post("/predict", insightData);
+    const response = await api.post("/insight", insightData); // URL balik ke /insight sesuai dokumen poin 4
     return response.data;
   },
 };

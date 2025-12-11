@@ -10,15 +10,15 @@ import {
   Mail,
   Eye,
   EyeOff,
-  User,
   KeyRound,
   ArrowLeft,
+  Send,
 } from "lucide-react";
 import logo from "../assets/logo.png";
 
 const LoginPage = () => {
   const [viewMode, setViewMode] = useState("login");
-  const [name, setName] = useState("");
+  // HAPUS STATE NAME KARENA TIDAK DIPAKAI
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -47,13 +47,16 @@ const LoginPage = () => {
         await authService.login(email, password);
         navigate("/dashboard");
       } else if (viewMode === "register") {
-        await authService.register(name, email, password);
-        setSuccessMsg("Registrasi berhasil! Silakan login.");
+        // REVISI: Register tanpa Nama, hanya Email & Password
+        await authService.register(email, password);
+        setSuccessMsg(
+          "Aktivasi Berhasil! Silakan login dengan password baru Anda."
+        );
         setViewMode("login");
         setPassword("");
       } else if (viewMode === "forgot") {
         await authService.forgotPassword(email);
-        setSuccessMsg("Link reset password telah dikirim.");
+        setSuccessMsg("Cek email Anda! Link reset password telah dikirim.");
       }
     } catch (err) {
       const apiError = err.response?.data?.message || err.message;
@@ -65,14 +68,12 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-4 font-sans relative">
-      {/* Dekorasi Background */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
         <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
         <div className="absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
       </div>
 
-      <div className="relative z-10 max-w-md w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 md:p-10 border border-slate-100">
-        {/* Header Logo */}
+      <div className="relative z-10 max-w-md w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 md:p-10 border border-slate-100 transition-all duration-300">
         <div className="text-center mb-8">
           <img
             src={logo}
@@ -82,60 +83,39 @@ const LoginPage = () => {
 
           <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
             {viewMode === "register"
-              ? "Buat Akun Baru"
+              ? "Aktivasi Akun" // Ganti Text jadi Aktivasi
               : viewMode === "forgot"
-              ? "Reset Kata Sandi"
+              ? "Lupa Kata Sandi?"
               : "Selamat Datang"}
           </h2>
 
-          <p className="text-slate-500 text-sm mt-2">
+          <p className="text-slate-500 text-sm mt-2 leading-relaxed">
             {viewMode === "register"
-              ? "Mulai perjalanan belajar Anda hari ini."
+              ? "Masukkan email terdaftar dan buat password baru."
               : viewMode === "forgot"
-              ? "Kami akan mengirimkan link pemulihan."
+              ? "Masukkan email Anda untuk reset password."
               : "Masuk untuk mengakses dashboard pembelajaran."}
           </p>
         </div>
 
-        {/* Notifications */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 text-red-600 text-sm rounded-xl flex items-start gap-3 border border-red-100">
+          <div className="mb-6 p-4 bg-red-50 text-red-600 text-sm rounded-xl flex items-start gap-3 border border-red-100 animate-fade-in">
             <AlertCircle size={20} className="shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
 
         {successMsg && (
-          <div className="mb-6 p-4 bg-emerald-50 text-emerald-600 text-sm rounded-xl flex items-start gap-3 border border-emerald-100">
+          <div className="mb-6 p-4 bg-emerald-50 text-emerald-600 text-sm rounded-xl flex items-start gap-3 border border-emerald-100 animate-fade-in">
             <CheckCircleIcon />
             <span>{successMsg}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Input Nama */}
-          {viewMode === "register" && (
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">
-                Nama Lengkap
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                  <User size={18} />
-                </div>
-                <input
-                  type="text"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Nama Lengkap Anda"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-slate-800 placeholder-slate-400"
-                />
-              </div>
-            </div>
-          )}
+          {/* INPUT NAMA DIHAPUS (Sesuai Dokumen) */}
 
-          {/* Input Email */}
+          {/* INPUT EMAIL */}
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">
               Alamat Email
@@ -155,12 +135,14 @@ const LoginPage = () => {
             </div>
           </div>
 
-          {/* Input Password */}
+          {/* INPUT PASSWORD */}
           {viewMode !== "forgot" && (
-            <div>
+            <div className="animate-fade-in">
               <div className="flex justify-between items-center mb-1.5 ml-1">
                 <label className="block text-sm font-semibold text-slate-700">
-                  Kata Sandi
+                  {viewMode === "register"
+                    ? "Buat Password Baru"
+                    : "Kata Sandi"}
                 </label>
                 {viewMode === "login" && (
                   <button
@@ -182,7 +164,11 @@ const LoginPage = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Masukkan kata sandi"
+                  placeholder={
+                    viewMode === "register"
+                      ? "Password baru Anda"
+                      : "Masukkan kata sandi"
+                  }
                   className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-slate-800 placeholder-slate-400"
                 />
                 <button
@@ -196,7 +182,7 @@ const LoginPage = () => {
             </div>
           )}
 
-          {/* Tombol Submit */}
+          {/* TOMBOL */}
           <div className="pt-2">
             <button
               type="submit"
@@ -212,13 +198,13 @@ const LoginPage = () => {
                   {viewMode === "register" ? (
                     <UserPlus size={18} />
                   ) : viewMode === "forgot" ? (
-                    <KeyRound size={18} />
+                    <Send size={18} />
                   ) : (
                     <LogIn size={18} />
                   )}
 
                   {viewMode === "register"
-                    ? "Daftar Sekarang"
+                    ? "Aktivasi Akun"
                     : viewMode === "forgot"
                     ? "Kirim Link Reset"
                     : "Masuk ke Dashboard"}
@@ -228,26 +214,25 @@ const LoginPage = () => {
           </div>
         </form>
 
-        {/* --- UPDATE: FOOTER ALIGNMENT --- */}
+        {/* FOOTER */}
         <div className="mt-8 text-center border-t border-slate-100 pt-6">
           {viewMode === "login" ? (
             <div className="flex items-center justify-center gap-1.5 text-sm text-slate-600">
-              <span>Belum punya akun?</span>
+              <span>Belum aktivasi akun?</span>
               <button
                 onClick={() => switchMode("register")}
                 className="font-bold text-blue-600 hover:text-blue-700 hover:underline"
               >
-                Daftar sekarang
+                Aktivasi sekarang
               </button>
             </div>
           ) : (
-            <div className="flex items-center justify-center gap-1.5 text-sm text-slate-600">
-              <span>Sudah punya akun?</span>
+            <div className="flex flex-col gap-2">
               <button
                 onClick={() => switchMode("login")}
-                className="font-bold text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1"
+                className="font-bold text-blue-600 hover:text-blue-700 hover:underline flex items-center justify-center gap-2 text-sm"
               >
-                <ArrowLeft size={16} /> Kembali Login
+                <ArrowLeft size={16} /> Kembali ke Halaman Login
               </button>
             </div>
           )}
@@ -261,7 +246,6 @@ const LoginPage = () => {
   );
 };
 
-// Helper Icon
 const CheckCircleIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
