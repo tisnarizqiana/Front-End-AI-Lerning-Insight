@@ -109,7 +109,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
               <h2 className="font-bold text-lg text-gray-900 dark:text-white mb-2 leading-tight">
                 {name}
               </h2>
-              <p className="text-xs text-gray-700 dark:text-gray-200 text-[17px] mb-3 font-mono">
+              <p className="text-xs text-gray-700 dark:text-gray-200 text-[18px] mb-3 font-mono">
                 {studentId}
               </p>
 
