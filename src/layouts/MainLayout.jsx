@@ -106,14 +106,14 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
                   className="w-20 h-20 rounded-full mx-auto object-cover border-4 border-white dark:border-gray-700 shadow-sm"
                 />
               </div>
-              <h2 className="font-bold text-lg text-gray-900 dark:text-white leading-tight">
+              <h2 className="font-bold text-lg text-gray-900 dark:text-white mb-2 leading-tight">
                 {name}
               </h2>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mb-4 font-mono">
+              <p className="text-xs text-gray-700 dark:text-gray-200 text-[17px] mb-3 font-mono">
                 {studentId}
               </p>
 
-              <span className="inline-block px-4 py-1.5 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 text-[11px] font-bold rounded-full">
+              <span className="inline-block px-4 py-1.5 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 text-[14px] font-bold rounded-full">
                 Ahead of Schedule
               </span>
 
@@ -124,7 +124,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
                 <div className="flex items-start gap-3 group">
                   <Building2 className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors mt-0.5" />
                   <div>
-                    <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold tracking-wide uppercase">
+                    <p className="text-[13px] text-gray-400 dark:text-gray-400 font-bold tracking-wide">
                       University
                     </p>
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-snug">
@@ -135,7 +135,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
                 <div className="flex items-start gap-3 group">
                   <GraduationCap className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors mt-0.5" />
                   <div>
-                    <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold tracking-wide uppercase">
+                    <p className="text-[13px] text-gray-400 dark:text-gray-400 font-bold tracking-wide">
                       Major
                     </p>
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-snug">
@@ -146,7 +146,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
                 <div className="flex items-start gap-3 group">
                   <User className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors mt-0.5" />
                   <div>
-                    <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold tracking-wide uppercase">
+                    <p className="text-[13px] text-gray-400 dark:text-gray-400 font-bold tracking-wide">
                       Mentor
                     </p>
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-snug">

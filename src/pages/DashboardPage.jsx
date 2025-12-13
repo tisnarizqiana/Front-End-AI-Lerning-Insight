@@ -223,6 +223,7 @@ const DashboardPage = () => {
             activeCourse={data?.active_course}
             examHistory={data?.exam_history}
             recommendation={data?.recommendation}
+            learnerProfile={data?.learner_profile}
             loading={loading}
           />
         </div>
