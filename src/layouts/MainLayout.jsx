@@ -1,54 +1,57 @@
 // Lokasi: src/layouts/MainLayout.jsx
 import React, { useState, useEffect } from "react";
-import { Outlet, useLocation, useNavigate, Link } from "react-router-dom";
-import { dashboardService, authService } from "../services/api"; // Import dashboardService
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   CheckSquare,
   Calendar,
-  Lightbulb,
-  Users,
   BookOpen,
   FileText,
+  Users,
+  LogOut,
+  Menu,
+  X,
   Building2,
   GraduationCap,
   User,
-  Menu,
-  X,
-  LogOut,
-  ChevronDown,
-  AlertTriangle,
-  Moon,
   Sun,
+  Moon,
+  ChevronDown,
 } from "lucide-react";
+import { dashboardService, authService } from "../services/api"; // Import Service
+import logo from "../assets/logo.png";
+import logoPutih from "../assets/logo-putih.png";
 
-import logoLight from "../assets/logo.png";
-import logoDark from "../assets/logo-putih.png";
-
-// --- SIDEBAR DINAMIS ---
+// --- KOMPONEN SIDEBAR (Internal) ---
 const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
-  // Terima props 'user'
   const location = useLocation();
 
-  // Gunakan data user asli jika ada, jika tidak pakai default (loading state)
-  const displayName = user?.name || "Memuat...";
-  const displayId = user?.student_id || "ID-.....";
-  const avatarBgColor = isDarkMode ? "1E3A8A" : "0ea5e9";
-  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    displayName
-  )}&background=${avatarBgColor}&color=fff&size=128`;
+  // Data Profil Dinamis (Fallback jika loading)
+  const name = user?.name || "Memuat...";
+  const studentId = user?.student_id || "ID-.....";
+  const university = user?.university || "Belum diatur";
+  const major = user?.major || "Belum diatur";
+  const mentor = user?.mentor || "Belum ditentukan";
 
-  const getLinkClass = (path) => {
-    const isActive = location.pathname === path;
-    return `flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-      isActive
-        ? "bg-blue-50 text-blue-600 dark:bg-gray-700 dark:text-white"
-        : "text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-    }`;
+  // Avatar Generator berdasarkan Nama
+  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    name
+  )}&background=${isDarkMode ? "1E3A8A" : "0ea5e9"}&color=fff&size=128`;
+
+  const isActive = (path) => {
+    return location.pathname === path
+      ? "bg-blue-50 text-blue-600 dark:bg-gray-700 dark:text-white"
+      : "text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white";
   };
+
+  const navClass = (path) =>
+    `flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isActive(
+      path
+    )}`;
 
   return (
     <>
+      {/* Overlay Mobile */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-20 md:hidden"
@@ -64,10 +67,10 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
         ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 
       `}
       >
-        {/* Header Logo */}
+        {/* Logo Header */}
         <div className="shrink-0 z-20 relative h-20 flex items-center justify-center bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
           <img
-            src={isDarkMode ? logoDark : logoLight}
+            src={isDarkMode ? logoPutih : logo}
             alt="Dicoding Logo"
             className="h-8 w-auto object-contain transition-opacity duration-300"
           />
@@ -81,18 +84,19 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto scrollbar-hide bg-white dark:bg-gray-800">
-          {/* PROFIL USER DINAMIS */}
+          {/* PROFILE CARD */}
           <div className="px-6 py-6">
             <div
-              className="
+              className={`
                   bg-white dark:bg-gray-800 
                   rounded-2xl p-6 pb-8 text-center 
                   relative overflow-hidden 
                   shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none
                   border border-gray-100 dark:border-gray-700
                   transition-colors
-              "
+              `}
             >
+              {/* Decorative Top Bar */}
               <div className="absolute top-0 left-0 w-full h-1.5 bg-blue-500 dark:bg-blue-600"></div>
 
               <div className="mt-2 mb-3">
@@ -102,12 +106,11 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
                   className="w-20 h-20 rounded-full mx-auto object-cover border-4 border-white dark:border-gray-700 shadow-sm"
                 />
               </div>
-
               <h2 className="font-bold text-lg text-gray-900 dark:text-white leading-tight">
-                {displayName}
+                {name}
               </h2>
               <p className="text-xs text-gray-400 dark:text-gray-500 mb-4 font-mono">
-                {displayId}
+                {studentId}
               </p>
 
               <span className="inline-block px-4 py-1.5 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 text-[11px] font-bold rounded-full">
@@ -116,6 +119,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
 
               <hr className="my-6 border-gray-100 dark:border-gray-700" />
 
+              {/* Detail Info */}
               <div className="text-left space-y-4">
                 <div className="flex items-start gap-3 group">
                   <Building2 className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors mt-0.5" />
@@ -124,11 +128,10 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
                       University
                     </p>
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-snug">
-                      {user?.university || "Belum diatur"}
+                      {university}
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-3 group">
                   <GraduationCap className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors mt-0.5" />
                   <div>
@@ -136,24 +139,10 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
                       Major
                     </p>
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-snug">
-                      {user?.major || "Belum diatur"}
+                      {major}
                     </p>
                   </div>
                 </div>
-
-                {/* Jika backend belum ada data Lecturer/Mentor, kita pakai fallback */}
-                <div className="flex items-start gap-3 group">
-                  <Users className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors mt-0.5" />
-                  <div>
-                    <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold tracking-wide uppercase">
-                      Lecturer
-                    </p>
-                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-snug">
-                      Dr. Iwan Satriawan
-                    </p>
-                  </div>
-                </div>
-
                 <div className="flex items-start gap-3 group">
                   <User className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors mt-0.5" />
                   <div>
@@ -161,7 +150,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
                       Mentor
                     </p>
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-snug">
-                      Majid Solihin Hadi
+                      {mentor}
                     </p>
                   </div>
                 </div>
@@ -169,47 +158,38 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
             </div>
           </div>
 
-          {/* Menu Navigasi */}
+          {/* NAVIGATION */}
           <div className="px-4 flex-1 pb-10">
             <p className="px-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3 dark:text-gray-500">
               Learning
             </p>
             <nav className="space-y-1 mb-8">
-              <Link to="/progress" className={getLinkClass("/progress")}>
-                <LayoutDashboard size={19} />
-                My Progress
+              <Link to="/progress" className={navClass("/progress")}>
+                <LayoutDashboard size={19} /> My Progress
               </Link>
-              <Link to="/check-in" className={getLinkClass("/check-in")}>
-                <CheckSquare size={19} />
-                Daily Check-in
+              <Link to="/check-in" className={navClass("/check-in")}>
+                <CheckSquare size={19} /> Daily Check-in
               </Link>
-              <Link to="/schedule" className={getLinkClass("/schedule")}>
-                <Calendar size={19} />
-                My Schedule
+              <Link to="/schedule" className={navClass("/schedule")}>
+                <Calendar size={19} /> My Schedule
               </Link>
-              <Link to="/dashboard" className={getLinkClass("/dashboard")}>
-                <Lightbulb size={19} />
-                Learning Insight
+              <Link to="/dashboard" className={navClass("/dashboard")}>
+                <BookOpen size={19} /> Learning Insight
               </Link>
-              <Link to="/mentoring" className={getLinkClass("/mentoring")}>
-                <Users size={19} />
-                Dicoding Mentoring ↗
+              <Link to="/mentoring" className={navClass("/mentoring")}>
+                <Users size={19} /> Dicoding Mentoring ↗
               </Link>
             </nav>
+
             <p className="px-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3 dark:text-gray-500">
               Document
             </p>
             <nav className="space-y-1">
-              <Link to="/portal" className={getLinkClass("/portal")}>
-                <BookOpen size={19} />
-                Student Portal
+              <Link to="/portal" className={navClass("/portal")}>
+                <BookOpen size={19} /> Student Portal
               </Link>
-              <Link
-                to="/announcement"
-                className={getLinkClass("/announcement")}
-              >
-                <FileText size={19} />
-                Announcement
+              <Link to="/announcement" className={navClass("/announcement")}>
+                <FileText size={19} /> Announcement
               </Link>
             </nav>
           </div>
@@ -219,24 +199,29 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
   );
 };
 
-// --- LAYOUT UTAMA ---
+// --- MAIN LAYOUT (Parent) ---
 const MainLayout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-  const [userData, setUserData] = useState(null); // State untuk menyimpan data user dari API
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isProfileOpen, setProfileOpen] = useState(false);
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
 
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    return (
-      localStorage.getItem("theme") === "dark" ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    );
-  });
+  // State User Data (Global untuk Layout)
+  const [user, setUser] = useState(null);
 
   const navigate = useNavigate();
 
-  // Effect 1: Dark Mode
+  // Dark Mode Logic
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== "undefined") {
+      return (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      );
+    }
+    return false;
+  });
+
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
@@ -247,24 +232,25 @@ const MainLayout = () => {
     }
   }, [isDarkMode]);
 
-  // Effect 2: Fetch User Data (Agar Sidebar Dinamis)
+  // --- FETCH USER DATA (Di sini kita ambil data untuk Sidebar & Header) ---
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const data = await dashboardService.getData();
         if (data && data.user) {
-          setUserData(data.user);
+          setUser(data.user);
         }
       } catch (error) {
-        console.error("Gagal mengambil data user:", error);
+        console.error("Gagal mengambil data user untuk layout:", error);
+        // Opsional: Redirect ke login jika token expired
       }
     };
     fetchUserData();
   }, []);
 
   const handleLogoutClick = () => {
-    setIsDropdownOpen(false);
-    setIsLogoutModalOpen(true);
+    setProfileOpen(false);
+    setLogoutModalOpen(true);
   };
 
   const confirmLogout = () => {
@@ -272,37 +258,39 @@ const MainLayout = () => {
     navigate("/login");
   };
 
-  // Avatar Dinamis untuk Header Kanan
-  const headerAvatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    userData?.name || "User"
+  // Avatar Kecil untuk Header
+  const headerAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    user?.name || "User"
   )}&background=${isDarkMode ? "1E3A8A" : "0D8ABC"}&color=fff`;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex font-sans overflow-hidden transition-colors duration-300">
-      {/* Sidebar menerima props user */}
+      {/* 1. Sidebar (Pass data User ke sini) */}
       <Sidebar
         isOpen={isSidebarOpen}
-        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
         isDarkMode={isDarkMode}
-        user={userData}
+        user={user} // <-- INI KUNCINYA
       />
 
+      {/* 2. Main Content Wrapper */}
       <div className="flex-1 flex flex-col h-screen ml-0 md:ml-72 transition-all duration-300">
-        {/* HEADER UTAMA */}
+        {/* Header */}
         <header
-          className="
+          className={`
             sticky top-0 z-20 h-20 
             flex items-center 
             bg-gray-50/95 dark:bg-gray-900/95 backdrop-blur-sm 
             border-b border-gray-200 dark:border-gray-700 
             px-4 md:px-8
-        "
+        `}
         >
           <div className="w-full max-w-7xl">
             <div className="flex justify-between items-center">
+              {/* Judul Halaman / Menu Toggle Mobile */}
               <div className="flex items-center gap-4">
                 <button
-                  onClick={() => setIsSidebarOpen(true)}
+                  onClick={() => setSidebarOpen(true)}
                   className="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 md:hidden"
                 >
                   <Menu size={24} />
@@ -318,7 +306,9 @@ const MainLayout = () => {
                 </div>
               </div>
 
+              {/* Kanan: Dark Mode & Profile */}
               <div className="flex items-center gap-3">
+                {/* Dark Mode Toggle */}
                 <button
                   onClick={() => setIsDarkMode(!isDarkMode)}
                   className="p-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-sm"
@@ -326,41 +316,43 @@ const MainLayout = () => {
                   {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
                 </button>
 
-                {/* User Dropdown Header */}
+                {/* Profile Dropdown */}
                 <div className="relative">
                   <button
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    onClick={() => setProfileOpen(!isProfileOpen)}
                     className="bg-white dark:bg-gray-800 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
                     <img
-                      src={headerAvatarUrl}
+                      src={headerAvatar}
                       alt="User"
                       className="w-8 h-8 rounded-full"
                     />
                     <span className="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-200">
-                      {userData?.name || "Loading..."}
+                      {user?.name || "Loading..."}
                     </span>
                     <ChevronDown
                       size={16}
                       className={`text-gray-400 transition-transform ${
-                        isDropdownOpen ? "rotate-180" : ""
+                        isProfileOpen ? "rotate-180" : ""
                       }`}
                     />
                   </button>
 
-                  {isDropdownOpen && (
+                  {/* Dropdown Menu */}
+                  {isProfileOpen && (
                     <div className="absolute right-0 mt-3 z-50 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 py-2 animate-fade-in w-64 md:w-full overflow-hidden">
+                      {/* Mobile Profile Info (Only visible on mobile) */}
                       <div className="flex flex-col items-center justify-center p-5 border-b border-gray-100 dark:border-gray-700 md:hidden bg-gradient-to-b from-blue-50/50 dark:from-gray-700 to-white dark:to-gray-800">
                         <img
-                          src={headerAvatarUrl}
+                          src={headerAvatar}
                           alt="Profile"
                           className="w-14 h-14 rounded-full border-4 border-white dark:border-gray-600 shadow-md mb-3"
                         />
                         <h4 className="font-bold text-gray-900 dark:text-white text-base">
-                          {userData?.name}
+                          {user?.name}
                         </h4>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 font-mono bg-gray-100 dark:bg-gray-900 px-2 py-0.5 rounded">
-                          {userData?.student_id}
+                          {user?.student_id}
                         </p>
                       </div>
 
@@ -380,6 +372,7 @@ const MainLayout = () => {
           </div>
         </header>
 
+        {/* Dynamic Page Content */}
         <main className="flex-1 overflow-y-auto p-4 md:p-8 pt-2">
           <div className="max-w-7xl">
             <Outlet />
@@ -387,6 +380,7 @@ const MainLayout = () => {
         </main>
       </div>
 
+      {/* Logout Confirmation Modal */}
       {isLogoutModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm p-6 transform transition-all scale-100">
@@ -403,7 +397,7 @@ const MainLayout = () => {
             </div>
             <div className="mt-6 flex gap-3">
               <button
-                onClick={() => setIsLogoutModalOpen(false)}
+                onClick={() => setLogoutModalOpen(false)}
                 className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
                 Batal

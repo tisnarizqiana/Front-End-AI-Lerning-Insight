@@ -10,7 +10,6 @@ const api = axios.create({
   },
 });
 
-// Interceptor untuk Token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -30,17 +29,14 @@ export const authService = {
     }
     return response.data;
   },
-
   register: async (email, password) => {
     const response = await api.post("/register", { email, password });
     return response.data;
   },
-
   forgotPassword: async (email) => {
     const response = await api.post("/forgot-password", { email });
     return response.data;
   },
-
   updateNewPassword: async (token, newPassword) => {
     const response = await axios.post(
       `${BASE_URL}/update-password`,
@@ -54,7 +50,6 @@ export const authService = {
     );
     return response.data;
   },
-
   logout: () => {
     localStorage.removeItem("token");
   },
@@ -63,21 +58,18 @@ export const authService = {
 export const dashboardService = {
   getData: async () => {
     const response = await api.get("/dashboard");
-    return response.data;
+    // Backend membungkus data dalam object "data", kita kembalikan isinya langsung biar frontend enak
+    return response.data.data;
   },
-  updateTarget: async (value) => {
-    const response = await api.post("/target", {
-      target_type: "study_duration",
-      target_value: parseInt(value),
+
+  // UPDATE: Endpoint baru /set-target
+  updateTarget: async (minutes) => {
+    const response = await api.post("/set-target", {
+      target_minutes: minutes.toString(), // Backend minta string/number, kita pastikan kirim sesuai
     });
     return response.data;
   },
-  postInsight: async (insightData) => {
-    const response = await api.post("/insight", insightData);
-    return response.data;
-  },
 
-  // --- FITUR BARU: TOMBOL ANALISIS ---
   predict: async () => {
     const response = await api.post("/predict");
     return response.data;
