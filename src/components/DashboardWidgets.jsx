@@ -93,7 +93,7 @@ export const WeeklyTargetCard = ({ data, loading, onEditClick }) => {
   );
 };
 
-// --- WIDGET 2: AI LEARNING INSIGHT ---
+// --- WIDGET 2: AI LEARNING INSIGHT (BUG FIXED + COLORFUL) ---
 export const InsightCard = ({ data, loading }) => {
   const [insightData, setInsightData] = useState(data);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -106,7 +106,12 @@ export const InsightCard = ({ data, loading }) => {
     try {
       setIsAnalyzing(true);
       const res = await dashboardService.predict();
-      setInsightData(res.data?.ai_insight || res);
+
+      // PERBAIKAN LOGIKA PENGAMBILAN DATA (FIX "BELUM ADA DATA")
+      // Cek apakah data ada di dalam 'ai_insight', atau langsung di 'data', atau di root 'res'
+      const newData = res.data?.ai_insight || res.data || res;
+
+      setInsightData(newData);
     } catch (error) {
       console.error("Gagal melakukan prediksi:", error);
       alert("Gagal melakukan analisis AI. Coba lagi nanti.");
@@ -194,11 +199,22 @@ export const InsightCard = ({ data, loading }) => {
               </p>
             </div>
 
-            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
-              {insightData?.advice ||
-                insightData?.suggestions?.[0] ||
-                "Mulai belajar untuk mendapatkan saran AI."}
-            </p>
+            {/* Menampilkan Advice atau List Suggestion jika ada */}
+            {insightData?.suggestions &&
+            Array.isArray(insightData.suggestions) ? (
+              <ul className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3 space-y-1">
+                {insightData.suggestions.map((sug, i) => (
+                  <li key={i} className="flex gap-2">
+                    <span className="text-pink-500">•</span> {sug}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
+                {insightData?.advice ||
+                  "Mulai belajar untuk mendapatkan saran AI."}
+              </p>
+            )}
 
             {/* Badge Tipe Belajar (Colorful) */}
             {insightData?.type && (
@@ -283,7 +299,7 @@ export const SubmissionCard = ({ data }) => {
   );
 };
 
-// --- SIDEBAR KANAN ---
+// --- SIDEBAR KANAN (Updated: XP Dinamis & Learner Profile Colors) ---
 export const RightSidebarWidgets = ({
   user,
   activeCourse,
@@ -320,6 +336,7 @@ export const RightSidebarWidgets = ({
           Icon: CheckSquare,
         };
       case "Struggling Learner":
+        // WARNA MERAH/PINK SESUAI REQUEST (TIDAK AMAN)
         return {
           container: "border-pink-200 dark:border-pink-900/50",
           bgIcon: "bg-pink-50 dark:bg-pink-900/20",
@@ -357,7 +374,7 @@ export const RightSidebarWidgets = ({
         )}
       </div>
 
-      {/* TIPE BELAJAR (WARNA-WARNI) */}
+      {/* TIPE BELAJAR (LEARNER PROFILE) - WARNA DINAMIS */}
       <div
         className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border p-5 relative overflow-hidden transition-colors ${profileStyle.container}`}
       >
@@ -388,7 +405,7 @@ export const RightSidebarWidgets = ({
         )}
       </div>
 
-      {/* WIDGET SEDANG DIPELAJARI (LOGO ASET) */}
+      {/* WIDGET SEDANG DIPELAJARI (LINK KE DICODING) */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 transition-colors">
         <h3 className="font-bold text-gray-800 dark:text-white mb-5 flex items-center gap-2">
           <BookOpen size={20} className="text-blue-500" /> Sedang Dipelajari
@@ -449,7 +466,7 @@ export const RightSidebarWidgets = ({
               </div>
             </div>
 
-            {/* --- BUTTON "LANJUTKAN BELAJAR" (SEKARANG MENJADI LINK KE DICODING) --- */}
+            {/* --- BUTTON "LANJUTKAN BELAJAR" MENJADI LINK --- */}
             <a
               href="https://www.dicoding.com/dashboard/"
               target="_blank"
