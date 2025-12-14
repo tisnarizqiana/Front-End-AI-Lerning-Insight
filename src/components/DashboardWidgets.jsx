@@ -451,7 +451,7 @@ export const RightSidebarWidgets = ({
 
             {/* --- BUTTON "LANJUTKAN BELAJAR" (SEKARANG MENJADI LINK KE DICODING) --- */}
             <a
-              href="https://www.dicoding.com"
+              href="https://www.dicoding.com/dashboard/"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full bg-gray-900 dark:bg-gray-700 hover:bg-black dark:hover:bg-gray-600 text-white text-sm font-bold py-3 rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
