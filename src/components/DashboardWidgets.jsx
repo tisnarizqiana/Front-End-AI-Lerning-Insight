@@ -93,7 +93,7 @@ export const WeeklyTargetCard = ({ data, loading, onEditClick }) => {
   );
 };
 
-// --- WIDGET 2: AI LEARNING INSIGHT (Visual Cantik, Layout Tetap) ---
+// --- WIDGET 2: AI LEARNING INSIGHT ---
 export const InsightCard = ({ data, loading }) => {
   const [insightData, setInsightData] = useState(data);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -117,86 +117,101 @@ export const InsightCard = ({ data, loading }) => {
 
   const isLoading = loading || isAnalyzing;
 
+  // Helper warna badge tipe belajar
+  const getBadgeColor = (type) => {
+    const t = type?.toLowerCase() || "";
+    if (t.includes("struggling"))
+      return "bg-pink-100 text-pink-700 border-pink-200";
+    if (t.includes("fast") || t.includes("achiever"))
+      return "bg-blue-100 text-blue-700 border-blue-200";
+    if (t.includes("consistent"))
+      return "bg-green-100 text-green-700 border-green-200";
+    return "bg-gray-100 text-gray-700 border-gray-200";
+  };
+
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/30 mb-6 relative transition-colors duration-300 overflow-hidden">
-      {/* Background Dekorasi Halus (Opsional, tidak mengganggu layout) */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-50 to-purple-50 dark:from-pink-900/10 dark:to-purple-900/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+      {/* Dekorasi Background Halus */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-pink-50 dark:bg-pink-900/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 relative z-10">
-        <div className="flex items-center gap-3">
-          {/* Ikon dengan Gradient Soft */}
-          <div className="bg-gradient-to-br from-pink-100 to-rose-100 dark:from-pink-900/30 dark:to-rose-900/30 p-2.5 rounded-xl text-pink-600 dark:text-pink-400 shadow-sm border border-pink-50 dark:border-pink-800/30">
-            <Bot size={24} />
+        <div className="flex items-center gap-4">
+          {/* Ikon dengan Gradient */}
+          <div className="bg-gradient-to-br from-pink-100 to-rose-200 dark:from-pink-900/40 dark:to-rose-800/40 p-3 rounded-2xl text-pink-600 dark:text-pink-300 shadow-sm border border-pink-50 dark:border-pink-800/30">
+            <Bot size={26} />
           </div>
           <div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg leading-tight">
               AI Learning Insight
             </h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               Analisis personal aktivitas 3 hari terakhir
             </p>
           </div>
         </div>
 
-        {/* Tombol Gradient "Analisis Sekarang" */}
+        {/* Tombol Gradient & Shadow */}
         <button
           onClick={handlePredict}
           disabled={isLoading}
           className={`
-            flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-white shadow-md transition-all transform active:scale-95
+            flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold text-white shadow-lg transition-all transform active:scale-95
             ${
               isLoading
-                ? "bg-gray-300 dark:bg-gray-600 cursor-wait"
-                : "bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 shadow-pink-500/30"
+                ? "bg-gray-300 dark:bg-gray-600 cursor-wait shadow-none"
+                : "bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 shadow-pink-500/30 hover:shadow-pink-500/50"
             }
           `}
         >
           {isLoading ? (
-            <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+            <div className="animate-spin h-3 w-3 border-2 border-white border-t-transparent rounded-full" />
           ) : (
-            <Sparkles size={16} />
+            <Sparkles size={14} fill="currentColor" />
           )}
-          <span>{isLoading ? "Memproses..." : "Analisis Sekarang"}</span>
+          {isLoading ? "Memproses..." : "Analisis Sekarang"}
         </button>
       </div>
 
       {isLoading ? (
         <div className="space-y-4 animate-pulse">
-          <div className="h-16 bg-pink-50 dark:bg-gray-700 rounded-lg border-l-4 border-pink-300"></div>
-          <div className="h-24 bg-gray-100 dark:bg-gray-700 rounded-lg"></div>
+          <div className="h-16 bg-pink-50 dark:bg-gray-700 rounded-xl"></div>
+          <div className="h-24 bg-gray-100 dark:bg-gray-700 rounded-xl"></div>
         </div>
       ) : (
-        <>
-          {/* Quote Box dengan Warna Hangat (Orange-Rose) */}
-          <div className="bg-gradient-to-r from-orange-50 to-rose-50 dark:from-gray-700/40 dark:to-gray-700/40 border-l-4 border-orange-400 pl-4 py-3 mb-4 rounded-r-lg">
-            <p className="text-gray-800 dark:text-gray-200 italic font-medium text-lg font-serif">
+        <div className="space-y-4">
+          {/* Quote Box - Warm Tone */}
+          <div className="bg-gradient-to-r from-orange-50/80 to-rose-50/50 dark:from-gray-700/40 dark:to-gray-700/40 border-l-4 border-orange-400 p-5 rounded-r-xl">
+            <p className="text-gray-800 dark:text-gray-200 italic font-medium font-serif text-[15px] leading-relaxed">
               "{insightData?.motivation || "Belum ada data."}"
             </p>
           </div>
 
-          {/* Advice Box (Layout Asli, Warna Sedikit Diperhalus) */}
-          <div className="bg-gray-50 dark:bg-gray-700/30 p-5 rounded-xl border border-gray-100 dark:border-gray-600">
-            <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2 tracking-wider">
-              DATA-DRIVEN ADVICE
-            </h4>
-
-            {insightData?.suggestions && insightData.suggestions.length > 0 ? (
-              <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
-                {insightData.suggestions.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="text-pink-500 mt-0.5">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {insightData?.advice ||
-                  "Mulai belajar untuk mendapatkan saran AI."}
+          {/* Advice Box - Cool Tone */}
+          <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-5 border border-slate-100 dark:border-slate-700/50">
+            <div className="flex justify-between items-start mb-2">
+              <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                DATA-DRIVEN ADVICE
               </p>
+            </div>
+
+            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
+              {insightData?.advice ||
+                insightData?.suggestions?.[0] ||
+                "Mulai belajar untuk mendapatkan saran AI."}
+            </p>
+
+            {/* Badge Tipe Belajar (Colorful) */}
+            {insightData?.type && (
+              <span
+                className={`inline-block text-[10px] px-3 py-1 rounded-md font-bold uppercase border ${getBadgeColor(
+                  insightData.type
+                )}`}
+              >
+                {insightData.type}
+              </span>
             )}
           </div>
-        </>
+        </div>
       )}
     </div>
   );
@@ -305,7 +320,6 @@ export const RightSidebarWidgets = ({
           Icon: CheckSquare,
         };
       case "Struggling Learner":
-        // WARNA MERAH/PINK SESUAI REQUEST
         return {
           container: "border-pink-200 dark:border-pink-900/50",
           bgIcon: "bg-pink-50 dark:bg-pink-900/20",
@@ -435,9 +449,15 @@ export const RightSidebarWidgets = ({
               </div>
             </div>
 
-            <button className="w-full bg-gray-900 dark:bg-gray-700 hover:bg-black dark:hover:bg-gray-600 text-white text-sm font-bold py-3 rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2">
+            {/* --- BUTTON "LANJUTKAN BELAJAR" (SEKARANG MENJADI LINK KE DICODING) --- */}
+            <a
+              href="https://www.dicoding.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-gray-900 dark:bg-gray-700 hover:bg-black dark:hover:bg-gray-600 text-white text-sm font-bold py-3 rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+            >
               Lanjutkan Belajar
-            </button>
+            </a>
           </>
         ) : (
           <div className="text-center py-6 text-gray-500 dark:text-gray-400">
