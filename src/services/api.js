@@ -1,7 +1,7 @@
 // Lokasi: src/services/api.js
 import axios from "axios";
 
-const BASE_URL = "https://asah-dicoding-backend.vercel.app/api";
+const BASE_URL = "https://backend-ai-learning.vercel.app/api";
 
 const api = axios.create({
   baseURL: BASE_URL,
