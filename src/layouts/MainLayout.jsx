@@ -125,7 +125,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
                   <Building2 className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors mt-0.5" />
                   <div>
                     <p className="text-[13px] text-gray-400 dark:text-gray-400 font-bold tracking-wide">
-                      University
+                      Universitas
                     </p>
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-snug">
                       {university}
@@ -136,7 +136,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
                   <GraduationCap className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors mt-0.5" />
                   <div>
                     <p className="text-[13px] text-gray-400 dark:text-gray-400 font-bold tracking-wide">
-                      Major
+                      Jurusan
                     </p>
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-snug">
                       {major}
@@ -161,20 +161,20 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
           {/* NAVIGATION */}
           <div className="px-4 flex-1 pb-10">
             <p className="px-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3 dark:text-gray-500">
-              Learning
+              Proses Belajar
             </p>
             <nav className="space-y-1 mb-8">
               <Link to="/progress" className={navClass("/progress")}>
-                <LayoutDashboard size={19} /> My Progress
+                <LayoutDashboard size={19} /> Progres Saya
               </Link>
               <Link to="/check-in" className={navClass("/check-in")}>
-                <CheckSquare size={19} /> Daily Check-in
+                <CheckSquare size={19} /> Check-in Harian
               </Link>
               <Link to="/schedule" className={navClass("/schedule")}>
-                <Calendar size={19} /> My Schedule
+                <Calendar size={19} /> Jadwal Saya
               </Link>
               <Link to="/dashboard" className={navClass("/dashboard")}>
-                <BookOpen size={19} /> Learning Insight
+                <BookOpen size={19} /> AI Learning Insight
               </Link>
               <Link to="/mentoring" className={navClass("/mentoring")}>
                 <Users size={19} /> Dicoding Mentoring ↗
@@ -182,14 +182,14 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
             </nav>
 
             <p className="px-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3 dark:text-gray-500">
-              Document
+              Dokumen
             </p>
             <nav className="space-y-1">
               <Link to="/portal" className={navClass("/portal")}>
-                <BookOpen size={19} /> Student Portal
+                <BookOpen size={19} /> Portal Siswa
               </Link>
               <Link to="/announcement" className={navClass("/announcement")}>
-                <FileText size={19} /> Announcement
+                <FileText size={19} /> Pengumuman
               </Link>
             </nav>
           </div>
