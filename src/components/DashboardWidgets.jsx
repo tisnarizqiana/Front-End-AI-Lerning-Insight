@@ -496,7 +496,7 @@ export const RightSidebarWidgets = ({
               </span>
             </div>
             <p className="text-[10px] text-purple-100 mb-3">
-              Based on AI Prediction
+              Berdasarkan Prediksi AI
             </p>
             <div className="bg-white/10 rounded p-3 backdrop-blur-md border border-white/20">
               <h4 className="font-bold text-sm mb-1">
