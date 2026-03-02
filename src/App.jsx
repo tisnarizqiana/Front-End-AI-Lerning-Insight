@@ -42,7 +42,7 @@ function App() {
             path="/progress"
             element={
               <ProtectedRoute>
-                <ComingSoonPage title="My Progress" />
+                <ComingSoonPage title="Progres Saya" />
               </ProtectedRoute>
             }
           />
@@ -50,7 +50,7 @@ function App() {
             path="/check-in"
             element={
               <ProtectedRoute>
-                <ComingSoonPage title="Daily Check-in" />
+                <ComingSoonPage title="Check-in Harian" />
               </ProtectedRoute>
             }
           />
@@ -58,7 +58,7 @@ function App() {
             path="/schedule"
             element={
               <ProtectedRoute>
-                <ComingSoonPage title="My Schedule" />
+                <ComingSoonPage title="Jadwal Saya" />
               </ProtectedRoute>
             }
           />
@@ -74,7 +74,7 @@ function App() {
             path="/portal"
             element={
               <ProtectedRoute>
-                <ComingSoonPage title="Student Portal" />
+                <ComingSoonPage title="Portal Siswa" />
               </ProtectedRoute>
             }
           />
@@ -82,7 +82,7 @@ function App() {
             path="/announcement"
             element={
               <ProtectedRoute>
-                <ComingSoonPage title="Announcement" />
+                <ComingSoonPage title="Pengumuman" />
               </ProtectedRoute>
             }
           />
