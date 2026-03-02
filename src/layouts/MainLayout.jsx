@@ -114,7 +114,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
               </p>
 
               <span className="inline-block px-4 py-1.5 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 text-[14px] font-bold rounded-full">
-                Ahead of Schedule
+                Lebih Cepat dari Jadwal
               </span>
 
               <hr className="my-6 border-gray-100 dark:border-gray-700" />
