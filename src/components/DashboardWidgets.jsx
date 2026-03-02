@@ -147,7 +147,7 @@ export const InsightCard = ({ data, loading }) => {
           </div>
           <div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg leading-tight">
-              Wawasan Pembelajaran AI
+              AI Learning Insight
             </h3>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               Analisis personal aktivitas 3 hari terakhir

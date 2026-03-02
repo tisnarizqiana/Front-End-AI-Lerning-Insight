@@ -35,7 +35,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
 
   // Avatar Generator berdasarkan Nama
   const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    name
+    name,
   )}&background=${isDarkMode ? "1E3A8A" : "0ea5e9"}&color=fff&size=128`;
 
   const isActive = (path) => {
@@ -46,7 +46,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isDarkMode, user }) => {
 
   const navClass = (path) =>
     `flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isActive(
-      path
+      path,
     )}`;
 
   return (
@@ -260,7 +260,7 @@ const MainLayout = () => {
 
   // Avatar Kecil untuk Header
   const headerAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    user?.name || "User"
+    user?.name || "User",
   )}&background=${isDarkMode ? "1E3A8A" : "0D8ABC"}&color=fff`;
 
   return (
@@ -301,7 +301,7 @@ const MainLayout = () => {
                     AI Learning Insight
                   </h1>
                   <p className="hidden md:block text-gray-500 dark:text-gray-400 text-sm mt-1">
-                    Track your learning goals, get AI-powered insights
+                    Pantau tujuan belajarmu dan dapatkan wawasan berbasis AI
                   </p>
                 </div>
               </div>
