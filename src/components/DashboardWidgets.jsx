@@ -147,7 +147,7 @@ export const InsightCard = ({ data, loading }) => {
           </div>
           <div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg leading-tight">
-              AI Learning Insight
+              Wawasan Pembelajaran AI
             </h3>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               Analisis personal aktivitas 3 hari terakhir
@@ -220,7 +220,7 @@ export const InsightCard = ({ data, loading }) => {
             {insightData?.type && (
               <span
                 className={`inline-block text-[10px] px-3 py-1 rounded-md font-bold uppercase border ${getBadgeColor(
-                  insightData.type
+                  insightData.type,
                 )}`}
               >
                 {insightData.type}
