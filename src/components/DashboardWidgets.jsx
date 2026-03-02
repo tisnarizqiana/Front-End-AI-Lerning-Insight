@@ -195,7 +195,7 @@ export const InsightCard = ({ data, loading }) => {
           <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-5 border border-slate-100 dark:border-slate-700/50">
             <div className="flex justify-between items-start mb-2">
               <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                DATA-DRIVEN ADVICE
+                Saran Berbasis Data
               </p>
             </div>
 
@@ -327,7 +327,7 @@ export const RightSidebarWidgets = ({
           titleColor: "text-blue-600 dark:text-blue-400",
           Icon: Zap,
         };
-      case "Consistent Learner":
+      case "Pembelajar yang Konsisten":
         return {
           container: "border-green-200 dark:border-green-900/50",
           bgIcon: "bg-green-50 dark:bg-green-900/20",
